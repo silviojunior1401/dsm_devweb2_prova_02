@@ -1,0 +1,89 @@
+html {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+h1 {
+	text-align: center;
+}
+
+table {
+    min-width: 400px;
+	margin: auto;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+td {
+	cursor: pointer;
+}
+
+th,
+td {
+	padding: 15px;
+	color: #fff;
+}
+
+tbody {
+	background: linear-gradient(45deg, #49a09d, #2f1541);
+}
+
+th {
+    text-align: left;
+	background-color: #55608f;
+}
+
+button {
+    min-height: 50px;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 6px;
+    background-color: #5e4dcd;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+input {
+    min-height: 50px;
+    max-width: 150px;
+    padding: 0 1rem;
+    font-size: 15px;
+    border: 1px solid #5e4dcd;
+    border-radius: 6px 0 0 6px;
+    background-color: transparent;
+}
+
+button:hover {
+    background-color: #5e5dcd;
+}
+
+input:focus,
+input:focus-visible {
+    border-color: #3898ec;
+    outline: none;
+}
+
+.selected {
+	color: white;
+	background-color: #49a09d;
+}
+
+.cadastro {
+    display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+
+.excluir {
+	margin-bottom: 20px;
+}
+

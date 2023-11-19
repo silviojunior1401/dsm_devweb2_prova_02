@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="./style.css" />
+		<title>Cadastro - Nome</title>
+	</head>
+
+	<body>
+		<h1>Cadastro - Nome</h1>
+		<form id="cadastroNome">
+			<div class="cadastro">
+				<input type="text" name="nome" id="nome" placeholder="Nome" />
+				<button type="submit" style="border-radius: 0 6px 6px 0">
+					Enviar
+				</button>
+			</div>
+
+			<div id="excluir" class="excluir" style="display: none">
+				<button type="button" onclick="excluirNome()">
+					Excluir Nome
+				</button>
+			</div>
+		</form>
+		<form id="mostrarNomes">
+			<button type="submit">Mostrar Nomes</button>
+		</form>
+
+		<div id="exibirNomes"></div>
+	</body>
+</html>
+
+<script>
+	const cadastroNome = async (body) => {
+		if (document.getElementById("excluir").style.display === "") {
+			body.nomeAnterior = [
+				...document.getElementsByClassName("selected"),
+			][0].id;
+
+			const response = await fetch("/atualizarNome", {
+				method: "put",
+				body: JSON.stringify(body),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		} else {
+			const response = await fetch("/cadastroNome", {
+				method: "post",
+				body: JSON.stringify(body),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		}
+
+		document.getElementById("nome").value = "";
+
+		document.getElementById("excluir").style = "display: none;";
+
+		mostrarNomes();
+	};
+
+	const mostrarNomes = () => {
+		fetch("/mostrarNomes").then(async (response) => {
+			const nomes = await response.json();
+
+			document.getElementById(
+				"exibirNomes"
+			).innerHTML = `<table><tr><th>Nomes</th></tr>
+                ${nomes.map(
+					(nome) =>
+						`<tr><td id="${nome}"><span>${nome}</span></td></tr>`
+				)}</table>`;
+
+			document.getElementById("exibirNomes").innerHTML = document
+				.getElementById("exibirNomes")
+				.innerHTML.replaceAll(",", "");
+
+			nomes.forEach((nome) => {
+				nome = nome.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+
+				const linha = document.getElementById(nome);
+
+				linha.addEventListener("click", function (event) {
+					if (linha.className.includes("selected")) {
+						linha.className = linha.className.replace(
+							"selected",
+							""
+						);
+
+						document.getElementById("nome").value = "";
+
+						document.getElementById("excluir").style =
+							"display: none;";
+					} else {
+						const elements = [
+							...document.getElementsByClassName("selected"),
+						];
+
+						elements.forEach((element) => {
+							element.className = element.className.replace(
+								"selected",
+								""
+							);
+						});
+
+						linha.className += " selected";
+
+						document.getElementById("nome").value = nome;
+
+						document.getElementById("excluir").style = "";
+					}
+				});
+			});
+		});
+	};
+
+	const excluirNome = async () => {
+		const nome = [...document.getElementsByClassName("selected")][0].id;
+
+		const response = await fetch(`/excluirNome/${nome}`, {
+			method: "delete",
+		});
+
+		document.getElementById("nome").value = "";
+
+		document.getElementById("excluir").style = "display: none;";
+
+		mostrarNomes();
+	};
+
+	document
+		.getElementById("cadastroNome")
+		.addEventListener("submit", function (event) {
+			event.preventDefault();
+			cadastroNome(
+				Object.fromEntries(new FormData(event.target).entries())
+			);
+		});
+
+	document
+		.getElementById("mostrarNomes")
+		.addEventListener("submit", function (event) {
+			event.preventDefault();
+			mostrarNomes();
+		});
+</script>
